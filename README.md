@@ -64,7 +64,7 @@ alpine = "tmux"
 
 ### **Commands**
 
-Here are some commands based on your requirements:
+Here are some commands based on the requirements:
 
 1. **harddots init**  
    * **Action:** Clones your dotfiles Git repository to a local cache (e.g., ~/.cache/harddots/dotfiles or ~/.local/share/harddots/dotfiles).  
@@ -88,7 +88,7 @@ Here are some commands based on your requirements:
    * **Action:**  
      1. Pulls the latest changes from your remote Git repository into the local cache.  
      2. Iterates through all configured applications.  
-     3. Since you're using hardlinks, once the file in the Git cache is updated, the linked target_path automatically reflects these changes. There's no explicit "re-linking" step needed unless the hardlink was broken.  
+     3. Since we are using hardlinks, once the file in the Git cache is updated, the linked target_path automatically reflects these changes. There's no explicit "re-linking" step needed unless the hardlink was broken.  
      4. Perhaps it could verify that hardlinks are still in place.  
    * **Purpose:** Keep configurations in sync with the Git remote.  
 4. **harddots status**  
@@ -115,19 +115,19 @@ Here are some commands based on your requirements:
 * **TOML Parsing:** The toml crate is excellent for this.  
 * **Command Execution:**  
   * std::process::Command is the standard library way to run external commands (like apt, brew, ln, git).  
-  * You'll need to carefully handle arguments, especially for sudo or doas.  
+  * We need to carefully handle arguments, especially for sudo or doas.  
 * **OS Detection:**  
   * The std::env::consts::OS can give you broad OS types ("macos", "linux").  
-  * For Linux distributions (Debian, Alpine), you might need to check files like /etc/os-release. Crates like os_info or sys-info could be helpful.  
+  * For Linux distributions (Debian, Alpine), we might need to check files like /etc/os-release. Crates like os_info or sys-info could be helpful.  
 * **Filesystem Operations:**  
   * std::fs for creating directories, checking paths, creating hardlinks (std::fs::hard_link).  
   * std::path::PathBuf for path manipulation.  
-  * To expand ~, you can use the dirs or shellexpand crates.  
+  * To expand ~, we can use the dirs or shellexpand crates.  
 * **Git Interaction:**  
   * You can either call the git command-line tool directly.  
   * Or use a Rust Git library like git2 for more programmatic control (though it can be more complex). For your initial needs, calling git CLI might be simpler.  
 * **Error Handling:** Rust's Result type will be essential for robust error handling.  
-* **Hardlink Verification:** To verify a hardlink, you'd get the metadata (specifically the inode number) of both the target file and the source file in your cache and compare them. std::fs::metadata() and then metadata.ino() (on Unix).
+* **Hardlink Verification:** To verify a hardlink, we get the metadata (specifically the inode number) of both the target file and the source file in the cache and compare them. std::fs::metadata() and then metadata.ino() (on Unix).
 
 ### **Why Hardlinks?**
 
@@ -139,7 +139,7 @@ You specified hardlinks. The main advantages are:
 The main disadvantage:
 
 * **Same Filesystem:** Source and target must be on the same filesystem. Usually true for user configs within their home directory and a cache also in the home directory (e.g., ~/.cache).  
-* **Directories:** You cannot hardlink directories. This is fine for individual config files.
+* **Directories:** We cannot hardlink directories. This is fine for individual config files.
 
 ### **Workflow Example (New System)**
 
