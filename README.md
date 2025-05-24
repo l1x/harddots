@@ -155,3 +155,30 @@ The main disadvantage:
      * Runs ln ~/.cache/harddots/dotfiles/starship/starship.toml ~/.config/starship.toml.  
    * Repeats for nvim, tmux, etc.
 
+
+## Code
+
+
+```
+harddots/
+├── src/
+│   ├── main.rs             # Entry point, CLI parsing, and command dispatching
+│   ├── config.rs           # TOML parsing and configuration structs
+│   ├── host.rs             # OS detection and host-specific logic
+│   ├── git.rs              # Git repository operations (clone, pull)
+│   ├── filesystem.rs       # Filesystem operations (hardlinks, path expansion)
+│   ├── package.rs          # Package manager interactions (apt, brew, apk)
+│   ├── state.rs            # State tracking and verification (installed, configured)
+│   ├── commands/
+│   │   ├── mod.rs          # Command module declarations
+│   │   ├── init.rs         # Logic for `harddots init`
+│   │   ├── deploy.rs       # Logic for `harddots deploy`
+│   │   ├── update.rs       # Logic for `harddots update`
+│   │   ├── status.rs       # Logic for `harddots status`
+│   │   ├── add.rs          # Logic for `harddots add`
+│   │   └── remove.rs       # Logic for `harddots remove`
+│   └── error.rs            # Custom error types and handling
+├── harddots.toml           # Example configuration file
+├── Cargo.toml              # Dependencies and project metadata
+└── README.md               # Project documentation
+```
