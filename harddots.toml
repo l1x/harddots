@@ -1,11 +1,21 @@
-git_repo = "git@github.com:yourusername/dotfiles.git"
+git_repo = "git@github.com:l1x/dotfiles.git"
 cache_dir = "~/.cache/harddots"
+
+[[applications]]
+name = "ssh"
+target_path = "~/.ssh/config"
+source_git_path = "ssh-client/config"
+
+[applications.packages]
+macos = "openssh"
+debian = "openssh-client"
+alpine = "openssh-client"
 
 [[applications]]
 name = "starship"
 target_path = "~/.config/starship.toml"
 source_git_path = "starship/starship.toml"
-version = ">= 1.10.0"
+
 [applications.packages]
 macos = "starship"
 debian = "starship"
@@ -15,18 +25,18 @@ alpine = "starship"
 name = "tmux"
 target_path = "~/.tmux.conf"
 source_git_path = "tmux/tmux.conf"
+
 [applications.packages]
 macos = "tmux"
 debian = "tmux"
 alpine = "tmux"
 
 [[applications]]
-name = "neovim"
-target_path = "~/.config/nvim/init.lua"
-source_git_path = "nvim/init.lua"
-[applications.packages]
-macos = "neovim"
-debian = "neovim"
-[applications.custom_install]
-alpine = "apk add neovim --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community"
+name = "fish"
+target_path = "~/.config/fish/config.fish"
+source_git_path = "fish/config"
 
+[applications.packages]
+macos = "fish"
+debian = "fish"
+alpine = "fish"

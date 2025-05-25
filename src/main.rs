@@ -1,12 +1,15 @@
 use clap::{Parser, Subcommand};
 use tracing::error;
-use tracing::info;
 use tracing_subscriber::filter::EnvFilter;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 mod commands;
 mod config;
 mod error;
+mod filesystem;
+mod git;
+mod host;
+mod package;
 
 use commands::add;
 use commands::deploy;
@@ -87,7 +90,7 @@ enum Commands {
 fn main() -> Result<(), HarddotsError> {
     // Initialize logging
     tracing_subscriber::registry()
-        .with(tracing_subscriber::EnvFilter::new(
+        .with(EnvFilter::new(
             std::env::var("RUST_LOG").unwrap_or_else(|_| "info,tower_http=info".into()),
         ))
         .with(tracing_subscriber::fmt::layer())
