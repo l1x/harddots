@@ -3,6 +3,7 @@ use tracing::error;
 use tracing_subscriber::filter::EnvFilter;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
+mod clap_complete;
 mod commands;
 mod config;
 mod error;
