@@ -102,7 +102,7 @@ fn main() -> Result<(), HarddotsError> {
 
     // Load configuration from harddots.toml
     let config_path = "harddots.toml";
-    let config = match HarddotsConfig::load(config_path) {
+    let mut config = match HarddotsConfig::load(config_path) {
         Ok(config) => config,
         Err(e) => {
             error!("Failed to load configuration from {}: {}", config_path, e);
@@ -135,6 +135,6 @@ fn main() -> Result<(), HarddotsError> {
             debian_pkg,
             alpine_pkg,
         ),
-        Commands::Remove { name, force } => remove::run(&config, &name, force),
+        Commands::Remove { name, force } => remove::run(&mut config, &name, force),
     }
 }
