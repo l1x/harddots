@@ -1,84 +1,104 @@
 # harddots
 
-Simple automation of state (configuration, packages) management for UNIX like systems. Imagine Ansible but much simpler.
+A single-binary SSH orchestrator that applies manifests (packages + templated config files) to multiple Linux servers. No agents, no complex DSL, no state files.
 
 ## Concepts
 
-- single file contains the inventory and the tasks
-- Zero remote dependencies: use SSH + standard Unix tools only
+- **Manifest**: TOML file describing what to install and deploy
+- **Node file**: TOML file listing target servers
+- Zero remote dependencies: SSH + standard Unix tools only
 - Single binary, no agent installation
-- Declarative tasks with imperative execution
 - Fail fast with clear error messages
 
-## Architecture
-
-### Core Components
-
-1. **Task Parser** - TOML task definitions
-2. **SSH Executor** - Command execution over SSH
-3. **Template Engine** - MiniJinja for local rendering
-4. **Inventory Manager** - Simple host list with groups
-
-### Execution Model
+## Execution Model
 
 ```
 Driver Node (localhost)
-  ├─> Parse tasks
-  ├─> Render templates locally
+  ├─> Parse manifest + nodes
   ├─> For each target host:
   │     ├─> SSH connect
-  │     ├─> Execute commands
-  │     └─> Transfer files via stdin
+  │     ├─> Detect OS
+  │     ├─> Install packages
+  │     ├─> Render templates locally
+  │     └─> Copy files via scp
   └─> Collect results
 ```
 
-## Error Handling
-
-- SSH connection failures → retry with backoff
-- Command failures → halt on error (configurable)
-- Template syntax errors → fail before SSH
-- Missing variables → compile-time check
-
-## Example manifest
+## File Structure
 
 ```
 repo/
-├── manifests
-│   ├── dev-env.toml
-│   └── os-settings.toml
-├── nodes
-│   ├── dev.toml
-│   ├── home-lab.toml
-│   └── prod.toml
-└── templates
-    ├── fish
-    │   └── config.fish.j2
-    ├── starship
-    │   └── starship.toml
-    └── tmux
+├── manifests/
+│   └── dev-env.toml
+├── nodes/
+│   ├── home-lab.toml
+│   └── prod.toml
+└── templates/
+    ├── fish/
+    │   └── config.fish.j2
+    ├── starship/
+    │   └── starship.toml
+    └── tmux/
         └── tmux.conf.j2
 ```
 
-- dev-env.toml
+## Example Manifest (`manifests/dev-env.toml`)
 
-```TOML
-name = "dev-env"
+```toml
+[vars]
+theme = "dark"
+editor = "nvim"
 
-[[tasks]]
-type = "package"
-packages = ["fish", "tmux", "starship"]
+[packages]
+common = ["git", "curl", "wget"]
 
-[[tasks]]
-type = "template"
-templates = [
-  { src = "fish/config.fish.j2", dest = "~/.config/fish/config.fish" },
-  { src = "tmux/tmux.conf.j2", dest = "~/.tmux.conf" },
-  { src = "starship/starship.toml", dest = "~/.config/starship.toml" },
-]
+[packages.debian]
+install = ["fish", "tmux"]
 
+[packages.alpine]
+install = ["fish", "tmux"]
+
+[[files]]
+template = "templates/fish/config.fish.j2"
+dest = "~/.config/fish/config.fish"
+
+[[files]]
+template = "templates/tmux/tmux.conf.j2"
+dest = "~/.tmux.conf"
 ```
 
-## Building the project
+## Example Node File (`nodes/home-lab.toml`)
+
+```toml
+[[node]]
+host = "pi1.local"
+user = "admin"
+
+[[node]]
+host = "192.168.1.50"
+user = "root"
+port = 2222
+
+[[node]]
+host = "desktop.local"
+user = "john"
+vars = { theme = "light" }
+```
+
+## Usage
+
+```bash
+# Apply to all nodes in a file
+harddots apply -m manifests/dev-env.toml -n nodes/home-lab.toml
+
+# Apply to a single host
+harddots apply -m manifests/dev-env.toml -H admin@pi1.local
+
+# Verbose mode
+harddots apply -m manifests/dev-env.toml -n nodes/home-lab.toml -v
+```
+
+## Building
 
 ```bash
 mise tasks --all
