@@ -1,0 +1,33 @@
+[package]
+name = "harddots"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+argh = { version = "0" }
+basic-toml = { version = "0" }
+minijinja = { version = "2" }
+os-release = { version = "0" }
+thiserror = { version = "2" }
+tracing = { version = "0" }
+tracing-subscriber = { version = "0", default-features = false, features = [
+  "env-filter",
+  "fmt",
+] }
+
+[dev-dependencies]
+criterion = { version = "0", features = ["html_reports"] }
+
+[profile.bench]
+lto = "thin"
+codegen-units = 16  # Make compiling criterion faster
+
+[profile.release]
+opt-level = "s"  # reduces binary size
+debug = "full"  # debuggable release binary
+split-debuginfo = "packed"  # generates a separate *.dwp/*.dSYM so the binary can get stripped
+strip = "symbols"  # See split-debuginfo - reduces binary size
+lto = true  # reduces binary size
+panic = "abort"  # reduces binary size
+incremental = true  # Improves re-compile times
+codegen-units = 1  # reduces binary size

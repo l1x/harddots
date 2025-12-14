@@ -1,0 +1,18 @@
+[tools]
+rust = "1.91.1"
+
+[tasks.lint]
+run = "cargo clippy"
+description = "Run clippy linter"
+
+[tasks.check]
+run = "cargo check"
+description = "Check compilation without building"
+
+[tasks.build-dev]
+run = "cargo build"
+description = "Build debug binary"
+
+[tasks.build-rel]
+run = "cargo build --release"
+description = "Build release binary"
