@@ -1,0 +1,6 @@
+[vars]
+environment = "dev"
+app_version = "1.2.3"
+
+[hosts]
+web01 = { ip = "10.0.1.1", vars = { role = "web" } }

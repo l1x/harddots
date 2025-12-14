@@ -77,3 +77,9 @@ templates = [
 ]
 
 ```
+
+## Building the project
+
+```bash
+mise tasks --all
+```
