@@ -8,6 +8,6 @@ packages = ["fish", "tmux", "starship"]
 type = "template"
 templates = [
   { src = "fish/config.fish.j2", dest = "{{ config_dir }}/fish/config.fish" },
-  { src = "tmux/tmux.conf.j2", dest = "~/.tmux.conf" }
-  { src = "starfish/starship.toml", dest = "{{ config_dir }}/starship.toml" }
+  { src = "tmux/tmux.conf.j2", dest = "~/.tmux.conf" },
+  { src = "starfish/starship.toml", dest = "{{ config_dir }}/starship.toml" },
 ]

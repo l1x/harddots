@@ -72,8 +72,8 @@ packages = ["fish", "tmux", "starship"]
 type = "template"
 templates = [
   { src = "fish/config.fish.j2", dest = "~/.config/fish/config.fish" },
-  { src = "tmux/tmux.conf.j2", dest = "~/.tmux.conf" }
-  { src = "starship/starship.toml", dest = "~/.config/starship.toml" }
+  { src = "tmux/tmux.conf.j2", dest = "~/.tmux.conf" },
+  { src = "starship/starship.toml", dest = "~/.config/starship.toml" },
 ]
 
 ```
